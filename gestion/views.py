@@ -1084,43 +1084,77 @@ def centre_delete(request, pk):
 
 
 
+
+
+
 @login_required
 def dashboard(request):
     today = timezone.now().date()
-    month_start = today.replace(day=1)
+    year = today.year
+    month = today.month
 
-    releves = ReleveCentreLivre.objects.filter(
-        date_fin__gte=month_start,
-        date_fin__lte=today,
+    date_debut, date_fin = _month_range(year, month)
+
+    # Tous les relevés dont la date de fin est dans le mois courant
+    qs = ReleveCentreLivre.objects.filter(
+        date_fin__gte=date_debut,
+        date_fin__lte=date_fin,
     )
 
     user = request.user
+    # Si c'est un utilisateur "centre", il ne voit que ses relevés
     if hasattr(user, "is_centre") and user.is_centre() and user.centre_id:
-        releves = releves.filter(centre=user.centre)
+        qs = qs.filter(centre=user.centre)
 
-    total_montant = releves.aggregate(total=Sum("montant_ventes"))["total"] or 0
+    # Total des ventes du mois
+    total_mois = qs.aggregate(total=Sum("montant_ventes"))["total"] or 0
 
-    centre_stats = (
-        releves.values("centre__nom")
+    # Meilleur centre (par montant de ventes)
+    ventes_par_centre = (
+        qs.values("centre__nom")
         .annotate(total=Sum("montant_ventes"))
         .order_by("-total")
     )
-    best_centre = centre_stats[0] if centre_stats else None
+    meilleur_centre = ventes_par_centre[0] if ventes_par_centre else None
 
-    livre_stats = (
-        releves.values("livre__nom")
-        .annotate(qte=Sum("quantite_vendue"))
-        .order_by("-qte")
+    # Livres : quantité vendue & montant
+    ventes_par_livre = (
+        qs.values("livre__nom")
+        .annotate(
+            quantite_vendue=Sum("quantite_vendue"),
+            montant_total=Sum("montant_ventes"),
+        )
+        .order_by("-quantite_vendue")
     )
-    best_livre = livre_stats[0] if livre_stats else None
+    livre_top = ventes_par_livre[0] if ventes_par_livre else None
+
+    month_choices = [
+        (1, "Janvier"),
+        (2, "Février"),
+        (3, "Mars"),
+        (4, "Avril"),
+        (5, "Mai"),
+        (6, "Juin"),
+        (7, "Juillet"),
+        (8, "Août"),
+        (9, "Septembre"),
+        (10, "Octobre"),
+        (11, "Novembre"),
+        (12, "Décembre"),
+    ]
+    month_name = dict(month_choices).get(month, "")
 
     context = {
-        "total_montant": total_montant,
-        "best_centre": best_centre,
-        "best_livre": best_livre,
-        "livre_stats": livre_stats,
+        "year": year,
+        "month": month,
+        "month_name": month_name,
+        "total_mois": total_mois,
+        "meilleur_centre": meilleur_centre,
+        "livre_top": livre_top,
+        "ventes_livres": ventes_par_livre,
     }
     return render(request, "gestion/dashboard.html", context)
+
 
 
 @login_required

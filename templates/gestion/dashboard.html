@@ -6,68 +6,91 @@
 {% block content %}
 <div class="space-y-6">
 
-  <!-- Cartes de synthèse -->
-  <div class="grid gap-4 md:grid-cols-3">
-    <div class="bg-white rounded-2xl shadow p-4">
-      <p class="text-sm text-slate-500">Ventes du mois</p>
+  <!-- Cartes principales -->
+  <div class="grid md:grid-cols-3 gap-4">
+    <!-- Total ventes du mois -->
+    <div class="bg-white rounded-2xl shadow px-4 py-4 md:px-6 md:py-5">
+      <p class="text-xs font-medium text-slate-500">Ventes du mois</p>
       <p class="mt-2 text-2xl font-semibold">
-        {{ total_montant|default:0 }} FCFA
+        {{ total_mois|floatformat:0 }} FCFA
+      </p>
+      <p class="mt-1 text-[11px] text-slate-400">
+        {{ month_name }} {{ year }}
       </p>
     </div>
 
-    <div class="bg-white rounded-2xl shadow p-4">
-      <p class="text-sm text-slate-500">Meilleur centre</p>
-      {% if best_centre %}
-        <p class="mt-2 text-lg font-semibold">
-          {{ best_centre.centre__nom }}
+    <!-- Meilleur centre -->
+    <div class="bg-white rounded-2xl shadow px-4 py-4 md:px-6 md:py-5">
+      <p class="text-xs font-medium text-slate-500">Meilleur centre</p>
+      {% if meilleur_centre %}
+        <p class="mt-2 text-sm font-semibold">
+          {{ meilleur_centre.centre__nom }}
         </p>
-        <p class="text-sm text-slate-500">
-          {{ best_centre.total }} FCFA
+        <p class="mt-1 text-[11px] text-slate-400">
+          {{ meilleur_centre.total|floatformat:0 }} FCFA de ventes sur le mois
         </p>
       {% else %}
-        <p class="mt-2 text-sm text-slate-500">Aucun relevé pour ce mois</p>
+        <p class="mt-2 text-sm text-slate-500">
+          Aucun relevé pour ce mois.
+        </p>
       {% endif %}
     </div>
 
-    <div class="bg-white rounded-2xl shadow p-4">
-      <p class="text-sm text-slate-500">Livre le plus vendu</p>
-      {% if best_livre %}
-        <p class="mt-2 text-lg font-semibold">
-          {{ best_livre.livre__nom }}
+    <!-- Livre le plus vendu -->
+    <div class="bg-white rounded-2xl shadow px-4 py-4 md:px-6 md:py-5">
+      <p class="text-xs font-medium text-slate-500">Livre le plus vendu</p>
+      {% if livre_top %}
+        <p class="mt-2 text-sm font-semibold">
+          {{ livre_top.livre__nom }}
         </p>
-        <p class="text-sm text-slate-500">
-          {{ best_livre.qte }} ex.
+        <p class="mt-1 text-[11px] text-slate-400">
+          {{ livre_top.quantite_vendue }} ex. vendus ({{ livre_top.montant_total|floatformat:0 }} FCFA)
         </p>
       {% else %}
-        <p class="mt-2 text-sm text-slate-500">Aucun relevé pour ce mois</p>
+        <p class="mt-2 text-sm text-slate-500">
+          Aucun relevé pour ce mois.
+        </p>
       {% endif %}
     </div>
   </div>
 
   <!-- Tableau ventes par livre -->
-  <div class="bg-white rounded-2xl shadow p-4">
-    <div class="flex items-center justify-between mb-4">
-      <h3 class="text-base font-semibold">Ventes par livre (mois en cours)</h3>
+  <div class="bg-white rounded-2xl shadow p-4 md:p-6">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="text-sm font-semibold">Ventes par livre (mois en cours)</h2>
+      <p class="text-[11px] text-slate-400">
+        {{ month_name }} {{ year }}
+      </p>
     </div>
+
     <div class="overflow-x-auto">
       <table class="min-w-full text-sm">
         <thead>
-          <tr class="border-b bg-slate-50">
-            <th class="text-left py-2 px-3">Livre</th>
-            <th class="text-right py-2 px-3">Quantité vendue</th>
+          <tr class="border-b border-slate-200 text-xs text-slate-500">
+            <th class="py-2 px-3 text-left">Livre</th>
+            <th class="py-2 px-3 text-right">Quantité vendue</th>
+            <th class="py-2 px-3 text-right">Montant total</th>
           </tr>
         </thead>
         <tbody>
-          {% if livre_stats %}
-            {% for item in livre_stats %}
-              <tr class="border-b last:border-0 hover:bg-slate-50">
-                <td class="py-2 px-3">{{ item.livre__nom }}</td>
-                <td class="py-2 px-3 text-right">{{ item.qte }}</td>
+          {% if ventes_livres %}
+            {% for item in ventes_livres %}
+              <tr class="border-b border-slate-100 hover:bg-slate-50">
+                <td class="py-2 px-3">
+                  {{ item.livre__nom }}
+                </td>
+                <td class="py-2 px-3 text-right">
+                  {{ item.quantite_vendue }}
+                </td>
+                <td class="py-2 px-3 text-right">
+                  {{ item.montant_total|floatformat:0 }} FCFA
+                </td>
               </tr>
             {% endfor %}
           {% else %}
             <tr>
-              <td colspan="2" class="py-4 px-3 text-center text-slate-500">
+              <td colspan="3"
+                  class="py-4 px-3 text-center text-slate-500">
                 Aucun relevé pour ce mois.
               </td>
             </tr>
