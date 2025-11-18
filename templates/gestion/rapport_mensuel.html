@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Rapport mensuel | Gestion Livre{% endblock %}
+{% block header_title %}Rapport mensuel{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Filtres -->
+  <div class="bg-white rounded-2xl shadow p-4 md:p-6 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <div>
+      <h1 class="text-lg font-semibold">
+        Rapport pour {{ month_name }} {{ year }}
+      </h1>
+      <p class="text-xs text-slate-500 mt-1">
+        Totaux par centre et par livre (période mensuelle).
+      </p>
+    </div>
+    <form method="get" class="flex flex-wrap items-end gap-3 text-sm">
+      <div>
+        <label class="block text-xs font-medium text-slate-500 mb-1">
+          Année
+        </label>
+        <select name="year"
+                class="rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900">
+          {% for y in year_choices %}
+            <option value="{{ y }}" {% if y == year %}selected{% endif %}>
+              {{ y }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-500 mb-1">
+          Mois
+        </label>
+        <select name="month"
+                class="rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900">
+          {% for m, name in month_choices %}
+            <option value="{{ m }}" {% if m == month %}selected{% endif %}>
+              {{ name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <a href="{% url 'export_rapport_mensuel_excel' %}?year={{ year }}&month={{ month }}"
+           class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+          ⬇️ Export Excel
+        </a>
+        <a href="{% url 'export_rapport_mensuel_pdf' %}?year={{ year }}&month={{ month }}"
+           class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+          ⬇️ PDF
+        </a>
+      <div class="pb-1">
+        <button type="submit"
+                class="rounded-lg bg-slate-900 text-white px-4 py-2 text-sm font-medium hover:bg-slate-800">
+          Mettre à jour
+        </button>
+        
+      </div>
+    </form>
+  </div>
+
+  <!-- Tableau -->
+    <div class="bg-white rounded-2xl shadow p-4 md:p-6 overflow-x-auto">
+    {% include "gestion/rapport_table.html" %}
+  </div>
+
+
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Rapport hebdomadaire | Gestion Livre{% endblock %}
+{% block header_title %}Rapport hebdomadaire{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Filtres -->
+  <div class="bg-white rounded-2xl shadow p-4 md:p-6 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <div>
+      <h1 class="text-lg font-semibold">
+        {{ week_label }}
+      </h1>
+      <p class="text-xs text-slate-500 mt-1">
+        Totaux par centre et par livre pour la semaine sélectionnée.
+      </p>
+    </div>
+    <form method="get" class="flex flex-wrap items-end gap-3 text-sm">
+      <div>
+        <label class="block text-xs font-medium text-slate-500 mb-1">
+          Année
+        </label>
+        <select name="year"
+                class="rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900">
+          {% for y in year_choices %}
+            <option value="{{ y }}" {% if y == year %}selected{% endif %}>
+              {{ y }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-500 mb-1">
+          Semaine
+        </label>
+        <select name="week"
+                class="rounded-lg border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900">
+          {% for w, label in week_choices %}
+            <option value="{{ w }}" {% if w == week %}selected{% endif %}>
+              {{ label }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="pb-1">
+        <button type="submit"
+                class="rounded-lg bg-slate-900 text-white px-4 py-2 text-sm font-medium hover:bg-slate-800">
+          Mettre à jour
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Tableau coloré réutilisé -->
+  <div class="bg-white rounded-2xl shadow p-4 md:p-6 overflow-x-auto">
+    {% include "gestion/rapport_table.html" %}
+  </div>
+
+</div>
+{% endblock %}

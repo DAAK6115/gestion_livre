@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Gestion Livre{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-900">
+  <div class="min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-900 text-slate-100 hidden md:flex flex-col">
+      <div class="px-6 py-4 border-b border-slate-800">
+        <h1 class="text-xl font-bold">Gestion Livre</h1>
+        <p class="text-xs text-slate-400">Tableaux & rapports</p>
+      </div>
+<nav class="flex-1 px-4 py-4 space-y-1 text-sm">
+  <a href="{% url 'dashboard' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+    🏠 Dashboard
+  </a>
+  <a href="{% url 'releve_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+    📒 Relevés
+  </a>
+  <a href="{% url 'centre_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+      🏢 Centres
+    </a>
+  <a href="{% url 'livre_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+    📚 Livres
+  </a>
+  <p class="mt-4 mb-1 text-[11px] uppercase tracking-wide text-slate-400">
+    Rapports
+  </p>
+  <a href="{% url 'rapport_mensuel' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+    📊 Mensuel
+  </a>
+  <a href="{% url 'rapport_hebdomadaire' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+    📊 Hebdomadaire
+  </a>
+  <a href="{% url 'rapport_trimestriel' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+    📊 Trimestriel
+  </a>
+  <a href="{% url 'rapport_annuel' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+    📊 Annuel
+  </a>
+   <a href="{% url 'rapport_global' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+    📊 Global
+  </a>
+</nav>
+
+
+
+      <div class="px-4 py-4 border-t border-slate-800 text-xs text-slate-400">
+        {% if request.user.is_authenticated %}
+          Connecté : <span class="font-semibold">{{ request.user.username }}</span><br />
+          {% if request.user.centre %}
+            Centre : {{ request.user.centre.nom }}
+          {% endif %}
+        {% endif %}
+      </div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <main class="flex-1 flex flex-col">
+      <!-- Topbar -->
+      <header class="h-16 bg-white shadow flex items-center justify-between px-4 md:px-8">
+        <div>
+          <h2 class="text-lg md:text-xl font-semibold">
+            {% block header_title %}Dashboard{% endblock %}
+          </h2>
+        </div>
+        <div class="flex items-center gap-4 text-sm">
+          {% if request.user.is_authenticated %}
+            <span class="hidden sm:inline text-slate-600">
+              {{ request.user.username }}
+            </span>
+            <a href="{% url 'logout' %}" class="px-3 py-1 rounded-full border border-slate-300 hover:bg-slate-100">
+              Déconnexion
+            </a>
+          {% else %}
+            <a href="{% url 'login' %}" class="px-3 py-1 rounded-full bg-slate-900 text-white">
+              Connexion
+            </a>
+          {% endif %}
+        </div>
+      </header>
+
+      <!-- Contenu de la page -->
+      <section class="p-4 md:p-8">
+        {% block content %}{% endblock %}
+      </section>
+    </main>
+  </div>
+</body>
+</html>

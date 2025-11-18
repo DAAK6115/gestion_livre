@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Nouveau relevé | Gestion Livre{% endblock %}
+{% block header_title %}Saisie d'un relevé{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl space-y-6">
+
+  <div class="bg-white rounded-2xl shadow p-4 md:p-6">
+    <h1 class="text-lg font-semibold mb-4">
+      Nouveau relevé centre / livre
+    </h1>
+
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="text-sm text-red-600 mb-2">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <!-- Centre + Livre -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.centre.label }}
+          </label>
+          {{ form.centre }}
+          {% for error in form.centre.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.livre.label }}
+          </label>
+          {{ form.livre }}
+          {% for error in form.livre.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Période -->
+      <div class="grid md:grid-cols-3 gap-4">
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.type_periode.label }}
+          </label>
+          {{ form.type_periode }}
+          {% for error in form.type_periode.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.date_debut.label }}
+          </label>
+          {{ form.date_debut }}
+          {% for error in form.date_debut.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.date_fin.label }}
+          </label>
+          {{ form.date_fin }}
+          {% for error in form.date_fin.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Zone "comme dans Excel" : stock, vendus, prix, dépenses -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.quantite_recue.label }}
+          </label>
+          {{ form.quantite_recue }}
+          <p class="text-[11px] text-slate-400">
+            Correspond au stock / nombre de livres en main pour cette période
+            (comme la colonne "comp / ess / VIAT / ACT" dans Excel).
+          </p>
+          {% for error in form.quantite_recue.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.quantite_vendue.label }}
+          </label>
+          {{ form.quantite_vendue }}
+          <p class="text-[11px] text-slate-400">
+            Nombre de livres vendus pendant cette période
+            (colonnes "VEN COM / VEN ESS / VEN VIAT / VENT ACT" dans Excel).
+          </p>
+          {% for error in form.quantite_vendue.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.prix_unitaire.label }}
+          </label>
+          {{ form.prix_unitaire }}
+          <p class="text-[11px] text-slate-400">
+            Laisse vide pour utiliser le prix par défaut du livre,
+            ou modifie-le si un prix spécial est appliqué.
+          </p>
+          {% for error in form.prix_unitaire.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.depenses.label }}
+          </label>
+          {{ form.depenses }}
+          <p class="text-[11px] text-slate-400">
+            Dépenses pour cette période (transport, commissions, etc.).
+          </p>
+          {% for error in form.depenses.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Encadré de rappel des calculs -->
+      <div class="mt-4 border border-slate-200 rounded-xl bg-slate-50 px-4 py-3 text-xs text-slate-600 space-y-1">
+        <p class="font-semibold text-slate-700">Rappel des calculs (comme dans Excel)</p>
+        <p>
+          <strong>Montant total des ventes</strong> =
+          <code>Nombre vendus × Prix unitaire</code>
+          (colonne <em>MTANT</em> dans ton fichier).
+        </p>
+        <p>
+          <strong>Reste en stock</strong> =
+          <code>Stock / reçus − Nombre vendus</code>
+          (colonnes <em>RESTE COM / REST ESS / RES VIA / RES ACT</em>).
+        </p>
+        <p class="text-[11px] text-slate-500">
+          Ces valeurs sont calculées automatiquement après l’enregistrement
+          du relevé et visibles dans les tableaux & rapports.
+        </p>
+      </div>
+
+      <div class="flex items-center justify-between pt-4">
+        <a href="{% url 'releve_list' %}"
+           class="text-xs text-slate-500 hover:underline">
+          Annuler et retourner à la liste
+        </a>
+        <button type="submit"
+                class="rounded-lg bg-slate-900 text-white px-4 py-2 text-sm font-medium hover:bg-slate-800">
+          Enregistrer le relevé
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

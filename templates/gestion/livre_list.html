@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Livres | Gestion Livre{% endblock %}
+{% block header_title %}Livres{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <div class="bg-white rounded-2xl shadow p-4 md:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+      <h1 class="text-lg font-semibold">Gestion des livres</h1>
+      <p class="text-xs text-slate-500 mt-1">
+        Les 4 livres principaux (Compagnon, Essentiel, Viatique, Activités) et les éventuels livres ajoutés.
+      </p>
+    </div>
+    <div>
+      <a href="{% url 'livre_create' %}"
+         class="inline-flex items-center rounded-lg bg-slate-900 text-white px-4 py-2 text-sm font-medium hover:bg-slate-800">
+        + Ajouter un livre
+      </a>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow p-4 md:p-6 overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead>
+        <tr class="border-b border-slate-200 text-xs text-slate-500">
+          <th class="py-2 px-3 text-left">Code</th>
+          <th class="py-2 px-3 text-left">Nom</th>
+          <th class="py-2 px-3 text-right">Pages</th>
+          <th class="py-2 px-3 text-right">Prix unitaire par défaut</th>
+          <th class="py-2 px-3 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if livres %}
+          {% for livre in livres %}
+            <tr class="border-b border-slate-100 hover:bg-slate-50">
+              <td class="py-2 px-3 font-mono text-xs text-slate-600">
+                {{ livre.code }}
+              </td>
+              <td class="py-2 px-3">
+                {{ livre.nom }}
+              </td>
+              <td class="py-2 px-3 text-right">
+                {{ livre.pages }}
+              </td>
+              <td class="py-2 px-3 text-right">
+                {{ livre.prix_unitaire_defaut }} FCFA
+              </td>
+              <td class="py-2 px-3 text-right space-x-2">
+                <a href="{% url 'livre_update' livre.pk %}"
+                   class="text-xs text-slate-700 hover:underline">
+                  Modifier
+                </a>
+                <a href="{% url 'livre_delete' livre.pk %}"
+                   class="text-xs text-red-600 hover:underline">
+                  Supprimer
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="5" class="py-4 px-3 text-center text-slate-500">
+              Aucun livre enregistré.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

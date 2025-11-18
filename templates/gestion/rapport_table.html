@@ -1,0 +1,107 @@
+<table class="min-w-full text-xs md:text-sm">
+  {% comment %} En-têtes colorés par livre {% endcomment %}
+  <thead>
+    <!-- Ligne 1 : noms des livres -->
+    <tr class="border-b">
+      <th rowspan="2" class="py-2 px-3 text-left align-middle bg-white">
+        Centre
+      </th>
+      {% for livre in livres %}
+        <th colspan="4"
+            class="py-2 px-3 text-center text-xs md:text-sm font-semibold
+            {% if forloop.counter0 == 0 %}bg-sky-50
+            {% elif forloop.counter0 == 1 %}bg-emerald-50
+            {% elif forloop.counter0 == 2 %}bg-amber-50
+            {% else %}bg-violet-50{% endif %}">
+          {{ livre.nom }}
+        </th>
+      {% endfor %}
+    </tr>
+
+    <!-- Ligne 2 : sous-colonnes -->
+    <tr class="border-b">
+      {% for livre in livres %}
+        <th class="py-2 px-3 text-right text-[11px] md:text-xs font-medium
+            {% if forloop.counter0 == 0 %}bg-sky-50
+            {% elif forloop.counter0 == 1 %}bg-emerald-50
+            {% elif forloop.counter0 == 2 %}bg-amber-50
+            {% else %}bg-violet-50{% endif %}
+            {% if not forloop.first %} border-l border-slate-200{% endif %}">
+          Qté reçue
+        </th>
+        <th class="py-2 px-3 text-right text-[11px] md:text-xs font-medium
+            {% if forloop.counter0 == 0 %}bg-sky-50
+            {% elif forloop.counter0 == 1 %}bg-emerald-50
+            {% elif forloop.counter0 == 2 %}bg-amber-50
+            {% else %}bg-violet-50{% endif %}">
+          Qté vendue
+        </th>
+        <th class="py-2 px-3 text-right text-[11px] md:text-xs font-medium
+            {% if forloop.counter0 == 0 %}bg-sky-50
+            {% elif forloop.counter0 == 1 %}bg-emerald-50
+            {% elif forloop.counter0 == 2 %}bg-amber-50
+            {% else %}bg-violet-50{% endif %}">
+          Reste
+        </th>
+        <th class="py-2 px-3 text-right text-[11px] md:text-xs font-medium
+            {% if forloop.counter0 == 0 %}bg-sky-50
+            {% elif forloop.counter0 == 1 %}bg-emerald-50
+            {% elif forloop.counter0 == 2 %}bg-amber-50
+            {% else %}bg-violet-50{% endif %}">
+          Montant
+        </th>
+      {% endfor %}
+    </tr>
+  </thead>
+
+  <tbody>
+    {% if rows %}
+      {% for row in rows %}
+        <tr class="border-b last:border-0 hover:bg-slate-50/40">
+          <td class="py-2 px-3 font-medium text-left whitespace-nowrap bg-white">
+            {{ row.centre.nom }}
+          </td>
+
+          {% for data in row.livres %}
+            <td class="py-2 px-3 text-right text-xs md:text-sm
+                       {% if forloop.counter0 == 0 %}bg-sky-50
+                       {% elif forloop.counter0 == 1 %}bg-emerald-50
+                       {% elif forloop.counter0 == 2 %}bg-amber-50
+                       {% else %}bg-violet-50{% endif %}
+                       {% if not forloop.first %} border-l border-slate-200{% endif %}">
+              {{ data.q_recue }}
+            </td>
+            <td class="py-2 px-3 text-right text-xs md:text-sm
+                       {% if forloop.counter0 == 0 %}bg-sky-50
+                       {% elif forloop.counter0 == 1 %}bg-emerald-50
+                       {% elif forloop.counter0 == 2 %}bg-amber-50
+                       {% else %}bg-violet-50{% endif %}">
+              {{ data.q_vendue }}
+            </td>
+            <td class="py-2 px-3 text-right text-xs md:text-sm
+                       {% if forloop.counter0 == 0 %}bg-sky-50
+                       {% elif forloop.counter0 == 1 %}bg-emerald-50
+                       {% elif forloop.counter0 == 2 %}bg-amber-50
+                       {% else %}bg-violet-50{% endif %}">
+              {{ data.reste }}
+            </td>
+            <td class="py-2 px-3 text-right text-xs md:text-sm
+                       {% if forloop.counter0 == 0 %}bg-sky-50
+                       {% elif forloop.counter0 == 1 %}bg-emerald-50
+                       {% elif forloop.counter0 == 2 %}bg-amber-50
+                       {% else %}bg-violet-50{% endif %}">
+              {{ data.montant }} FCFA
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="{{ colspan }}"
+            class="py-4 px-3 text-center text-slate-500">
+          Aucun relevé pour cette période.
+        </td>
+      </tr>
+    {% endif %}
+  </tbody>
+</table>

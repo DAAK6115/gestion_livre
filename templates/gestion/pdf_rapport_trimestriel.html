@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    @page {
+      size: A4 landscape;
+      margin: 15mm;
+    }
+    body {
+      font-family: DejaVu Sans, Arial, sans-serif;
+      font-size: 9pt;
+    }
+    h1 {
+      text-align: center;
+      font-size: 16pt;
+      margin-bottom: 2mm;
+    }
+    .meta {
+      text-align: center;
+      font-size: 9pt;
+      margin-bottom: 6mm;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    th, td {
+      border: 0.4pt solid #444;
+      padding: 2px 3px;
+    }
+    th {
+      background-color: #f0f0f0;
+      font-size: 8pt;
+    }
+    th.livre {
+      background-color: #e0e0e0;
+      font-weight: bold;
+      text-align: center;
+    }
+    th.sub {
+      background-color: #f5f5f5;
+      font-weight: normal;
+      text-align: center;
+    }
+    th.centre-col {
+      width: 16%;
+    }
+    td.centre {
+      text-align: left;
+      font-size: 8.5pt;
+      white-space: nowrap;
+    }
+    td.num {
+      text-align: right;
+      font-size: 8.5pt;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rapport trimestriel</h1>
+  <p class="meta">{{ quarter_label }} – {{ year }}</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th rowspan="2" class="centre-col">Centre</th>
+        {% for livre in livres %}
+          <th colspan="4" class="livre">{{ livre.nom }}</th>
+        {% endfor %}
+      </tr>
+      <tr>
+        {% for livre in livres %}
+          <th class="sub">Reçu</th>
+          <th class="sub">Vendu</th>
+          <th class="sub">Reste</th>
+          <th class="sub">Montant</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% if rows %}
+        {% for row in rows %}
+          <tr>
+            <td class="centre">{{ row.centre.nom }}</td>
+            {% for data in row.livres %}
+              <td class="num">{{ data.q_recue }}</td>
+              <td class="num">{{ data.q_vendue }}</td>
+              <td class="num">{{ data.reste }}</td>
+              <td class="num">{{ data.montant }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr>
+          <td colspan="{{ colspan }}">Aucun relevé pour cette période.</td>
+        </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</body>
+</html>

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Relevés | Gestion Livre{% endblock %}
+{% block header_title %}Relevés{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-lg font-semibold">Relevés</h1>
+  <a href="{% url 'releve_create' %}"
+     class="rounded-lg bg-slate-900 text-white text-sm px-4 py-2 hover:bg-slate-800">
+    + Nouveau relevé
+  </a>
+</div>
+
+<div class="bg-white rounded-2xl shadow p-4">
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm">
+      <thead>
+        <tr class="border-b bg-slate-50">
+          <th class="text-left py-2 px-3">Centre</th>
+          <th class="text-left py-2 px-3">Livre</th>
+          <th class="text-left py-2 px-3">Période</th>
+          <th class="text-right py-2 px-3">Qté reçue</th>
+          <th class="text-right py-2 px-3">Qté vendue</th>
+          <th class="text-right py-2 px-3">Reste</th>
+          <th class="text-right py-2 px-3">Montant ventes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if releves %}
+          {% for r in releves %}
+            <tr class="border-b last:border-0 hover:bg-slate-50">
+              <td class="py-2 px-3">{{ r.centre.nom }}</td>
+              <td class="py-2 px-3">{{ r.livre.nom }}</td>
+              <td class="py-2 px-3">
+                {{ r.get_type_periode_display }}<br>
+                <span class="text-xs text-slate-500">
+                  {{ r.date_debut }} → {{ r.date_fin }}
+                </span>
+              </td>
+              <td class="py-2 px-3 text-right">{{ r.quantite_recue }}</td>
+              <td class="py-2 px-3 text-right">{{ r.quantite_vendue }}</td>
+              <td class="py-2 px-3 text-right">{{ r.quantite_reste }}</td>
+              <td class="py-2 px-3 text-right">{{ r.montant_ventes }} FCFA</td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="7" class="py-4 px-3 text-center text-slate-500">
+              Aucun relevé pour le moment.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

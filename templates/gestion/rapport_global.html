@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Tableau global | Gestion Livre{% endblock %}
+{% block header_title %}Tableau global{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+    <div class="bg-white rounded-2xl shadow p-4 md:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+      <h1 class="text-lg font-semibold">
+        Totaux depuis le début
+      </h1>
+      <p class="text-xs text-slate-500 mt-1">
+        Somme de tous les relevés enregistrés (toutes périodes confondues),
+        par centre et par livre.
+      </p>
+    </div>
+    <div>
+      <a href="{% url 'export_rapport_global_excel' %}"
+         class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+        ⬇️ Export Excel
+      </a>
+    </div>
+  </div>
+
+
+  <div class="bg-white rounded-2xl shadow p-4 md:p-6 overflow-x-auto">
+    {% include "gestion/rapport_table.html" %}
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {% if mode == "create" %}
+    Nouveau centre | Gestion Livre
+  {% else %}
+    Modifier {{ centre.nom }} | Gestion Livre
+  {% endif %}
+{% endblock %}
+
+{% block header_title %}
+  {% if mode == "create" %}
+    Nouveau centre
+  {% else %}
+    Modifier le centre
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl space-y-6">
+
+  <div class="bg-white rounded-2xl shadow p-4 md:p-6">
+    <h1 class="text-lg font-semibold mb-4">
+      {% if mode == "create" %}Ajouter un centre{% else %}Modifier le centre{% endif %}
+    </h1>
+
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="text-sm text-red-600">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      {% for field in form %}
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ field.label }}
+          </label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="text-[11px] text-slate-400">{{ field.help_text }}</p>
+          {% endif %}
+          {% for error in field.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+      {% endfor %}
+
+      <div class="flex items-center justify-between pt-4">
+        <a href="{% url 'centre_list' %}"
+           class="text-xs text-slate-500 hover:underline">
+          Annuler et retourner à la liste
+        </a>
+        <button type="submit"
+                class="rounded-lg bg-slate-900 text-white px-4 py-2 text-sm font-medium hover:bg-slate-800">
+          {% if mode == "create" %}Enregistrer le centre{% else %}Enregistrer les modifications{% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

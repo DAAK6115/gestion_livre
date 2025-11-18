@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Supprimer {{ livre.nom }} | Gestion Livre{% endblock %}
+{% block header_title %}Supprimer un livre{% endblock %}
+
+{% block content %}
+<div class="max-w-xl">
+
+  <div class="bg-white rounded-2xl shadow p-4 md:p-6 space-y-4">
+    <h1 class="text-lg font-semibold text-red-600">
+      Confirmer la suppression
+    </h1>
+
+    <p class="text-sm text-slate-600">
+      Voulez-vous vraiment supprimer le livre
+      <span class="font-semibold">{{ livre.nom }}</span>
+      (code : <span class="font-mono text-xs">{{ livre.code }}</span>) ?
+    </p>
+
+    <p class="text-xs text-slate-500">
+      Les relevés existants associés à ce livre resteront en base,
+      mais ne seront plus rattachés à un livre actif.
+    </p>
+
+    <form method="post" class="flex items-center justify-between pt-4">
+      {% csrf_token %}
+      <a href="{% url 'livre_list' %}"
+         class="text-xs text-slate-500 hover:underline">
+        Annuler
+      </a>
+      <button type="submit"
+              class="rounded-lg bg-red-600 text-white px-4 py-2 text-sm font-medium hover:bg-red-700">
+        Oui, supprimer
+      </button>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Connexion | Gestion Livre{% endblock %}
+{% block header_title %}Connexion{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-[60vh]">
+  <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-6 md:p-8">
+    <h1 class="text-xl font-semibold mb-4 text-center">Connexion</h1>
+
+    {% if form.errors %}
+      <div class="mb-4 rounded-lg bg-red-50 text-red-700 text-sm px-3 py-2">
+        Identifiants incorrects. Veuillez réessayer.
+      </div>
+    {% endif %}
+
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Nom d'utilisateur</label>
+        <input type="text" name="username" autofocus
+               class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1">Mot de passe</label>
+        <input type="password" name="password"
+               class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900" />
+      </div>
+      <button type="submit"
+              class="w-full mt-2 rounded-lg bg-slate-900 text-white py-2 text-sm font-medium hover:bg-slate-800">
+        Se connecter
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

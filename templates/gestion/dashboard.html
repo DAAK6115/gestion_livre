@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Gestion Livre{% endblock %}
+{% block header_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- Cartes de synthèse -->
+  <div class="grid gap-4 md:grid-cols-3">
+    <div class="bg-white rounded-2xl shadow p-4">
+      <p class="text-sm text-slate-500">Ventes du mois</p>
+      <p class="mt-2 text-2xl font-semibold">
+        {{ total_montant|default:0 }} FCFA
+      </p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow p-4">
+      <p class="text-sm text-slate-500">Meilleur centre</p>
+      {% if best_centre %}
+        <p class="mt-2 text-lg font-semibold">
+          {{ best_centre.centre__nom }}
+        </p>
+        <p class="text-sm text-slate-500">
+          {{ best_centre.total }} FCFA
+        </p>
+      {% else %}
+        <p class="mt-2 text-sm text-slate-500">Aucun relevé pour ce mois</p>
+      {% endif %}
+    </div>
+
+    <div class="bg-white rounded-2xl shadow p-4">
+      <p class="text-sm text-slate-500">Livre le plus vendu</p>
+      {% if best_livre %}
+        <p class="mt-2 text-lg font-semibold">
+          {{ best_livre.livre__nom }}
+        </p>
+        <p class="text-sm text-slate-500">
+          {{ best_livre.qte }} ex.
+        </p>
+      {% else %}
+        <p class="mt-2 text-sm text-slate-500">Aucun relevé pour ce mois</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Tableau ventes par livre -->
+  <div class="bg-white rounded-2xl shadow p-4">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-base font-semibold">Ventes par livre (mois en cours)</h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm">
+        <thead>
+          <tr class="border-b bg-slate-50">
+            <th class="text-left py-2 px-3">Livre</th>
+            <th class="text-right py-2 px-3">Quantité vendue</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if livre_stats %}
+            {% for item in livre_stats %}
+              <tr class="border-b last:border-0 hover:bg-slate-50">
+                <td class="py-2 px-3">{{ item.livre__nom }}</td>
+                <td class="py-2 px-3 text-right">{{ item.qte }}</td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="2" class="py-4 px-3 text-center text-slate-500">
+                Aucun relevé pour ce mois.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
