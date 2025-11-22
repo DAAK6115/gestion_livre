@@ -2,10 +2,13 @@ services:
   - type: web
     name: gestion-livre
     env: python
+    plan: free
     buildCommand: "pip install -r requirements.txt"
     startCommand: "gunicorn gestion_livre.wsgi:application"
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.14
       - key: DEBUG
-        value: "false"
+        value: "False"
       - key: SECRET_KEY
         generateValue: true
