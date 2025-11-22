@@ -75,9 +75,16 @@
             <span class="hidden sm:inline text-slate-600">
               {{ request.user.username }}
             </span>
-            <a href="{% url 'logout' %}" class="px-3 py-1 rounded-full border border-slate-300 hover:bg-slate-100">
-              Déconnexion
-            </a>
+            <form method="post" action="{% url 'logout' %}">
+  {% csrf_token %}
+  <button
+    type="submit"
+    class="px-3 py-1 rounded-full border border-slate-300 hover:bg-slate-100"
+  >
+    Déconnexion
+  </button>
+</form>
+
           {% else %}
             <a href="{% url 'login' %}" class="px-3 py-1 rounded-full bg-slate-900 text-white">
               Connexion
