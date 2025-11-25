@@ -8,48 +8,50 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-100 text-slate-900">
-  <div class="min-h-screen flex">
+  <!-- Safe area pour les téléphones -->
+  <div class="min-h-screen flex"
+       style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
 
-    <!-- Sidebar -->
+    <!-- Sidebar (desktop) -->
     <aside class="w-64 bg-slate-900 text-slate-100 hidden md:flex flex-col">
       <div class="px-6 py-4 border-b border-slate-800">
         <h1 class="text-xl font-bold">Gestion Livre</h1>
-        <p class="text-xs text-slate-400">Tableaux & rapports</p>
+        <p class="text-xs text-slate-400">Tableaux &amp; rapports</p>
       </div>
-<nav class="flex-1 px-4 py-4 space-y-1 text-sm">
-  <a href="{% url 'dashboard' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
-    🏠 Dashboard
-  </a>
-  <a href="{% url 'releve_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
-    📒 Relevés
-  </a>
-  <a href="{% url 'centre_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
-      🏢 Centres
-    </a>
-  <a href="{% url 'livre_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
-    📚 Livres
-  </a>
-  <p class="mt-4 mb-1 text-[11px] uppercase tracking-wide text-slate-400">
-    Rapports
-  </p>
-  <a href="{% url 'rapport_mensuel' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
-    📊 Mensuel
-  </a>
-  <a href="{% url 'rapport_hebdomadaire' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
-    📊 Hebdomadaire
-  </a>
-  <a href="{% url 'rapport_trimestriel' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
-    📊 Trimestriel
-  </a>
-  <a href="{% url 'rapport_annuel' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
-    📊 Annuel
-  </a>
-   <a href="{% url 'rapport_global' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
-    📊 Global
-  </a>
-</nav>
 
+      <nav class="flex-1 px-4 py-4 space-y-1 text-sm">
+        <a href="{% url 'dashboard' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+          🏠 Dashboard
+        </a>
+        <a href="{% url 'releve_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+          📒 Relevés
+        </a>
+        <a href="{% url 'centre_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+          🏢 Centres
+        </a>
+        <a href="{% url 'livre_list' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+          📚 Livres
+        </a>
 
+        <p class="mt-4 mb-1 text-[11px] uppercase tracking-wide text-slate-400">
+          Rapports
+        </p>
+        <a href="{% url 'rapport_mensuel' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+          📊 Mensuel
+        </a>
+        <a href="{% url 'rapport_hebdomadaire' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+          📊 Hebdomadaire
+        </a>
+        <a href="{% url 'rapport_trimestriel' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+          📊 Trimestriel
+        </a>
+        <a href="{% url 'rapport_annuel' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+          📊 Annuel
+        </a>
+        <a href="{% url 'rapport_global' %}" class="block px-3 py-2 rounded-lg hover:bg-slate-800">
+          📊 Global
+        </a>
+      </nav>
 
       <div class="px-4 py-4 border-t border-slate-800 text-xs text-slate-400">
         {% if request.user.is_authenticated %}
@@ -63,28 +65,38 @@
 
     <!-- Contenu principal -->
     <main class="flex-1 flex flex-col">
+
       <!-- Topbar -->
       <header class="h-16 bg-white shadow flex items-center justify-between px-4 md:px-8">
-        <div>
+        <div class="flex items-center gap-3">
+          <!-- Bouton menu mobile (3 traits) -->
+          <button id="mobile-menu-button"
+                  class="md:hidden inline-flex items-center justify-center rounded-full border border-slate-300 w-9 h-9">
+            <span class="sr-only">Ouvrir le menu</span>
+            <span class="block w-4 h-[2px] bg-slate-800 mb-[3px]"></span>
+            <span class="block w-4 h-[2px] bg-slate-800 mb-[3px]"></span>
+            <span class="block w-4 h-[2px] bg-slate-800"></span>
+          </button>
+
           <h2 class="text-lg md:text-xl font-semibold">
             {% block header_title %}Dashboard{% endblock %}
           </h2>
         </div>
+
         <div class="flex items-center gap-4 text-sm">
           {% if request.user.is_authenticated %}
             <span class="hidden sm:inline text-slate-600">
               {{ request.user.username }}
             </span>
             <form method="post" action="{% url 'logout' %}">
-  {% csrf_token %}
-  <button
-    type="submit"
-    class="px-3 py-1 rounded-full border border-slate-300 hover:bg-slate-100"
-  >
-    Déconnexion
-  </button>
-</form>
-
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="px-3 py-1 rounded-full border border-slate-300 hover:bg-slate-100"
+              >
+                Déconnexion
+              </button>
+            </form>
           {% else %}
             <a href="{% url 'login' %}" class="px-3 py-1 rounded-full bg-slate-900 text-white">
               Connexion
@@ -92,71 +104,65 @@
           {% endif %}
         </div>
       </header>
-          <!-- Menu mobile -->
-    {% if request.resolver_match %}
-      {% with current=request.resolver_match.url_name %}
-      <nav class="md:hidden bg-white border-b border-slate-200">
-        <div class="flex overflow-x-auto gap-3 px-4 py-2 text-xs whitespace-nowrap">
-          <a href="{% url 'dashboard' %}"
-             class="px-3 py-1 rounded-full border
-             {% if current == 'dashboard' %}bg-slate-900 text-white border-slate-900
-             {% else %}border-slate-300 text-slate-600{% endif %}">
-            Tableau de bord
-          </a>
 
-          <a href="{% url 'releve_list' %}"
-             class="px-3 py-1 rounded-full border
-             {% if current == 'releve_list' %}bg-slate-900 text-white border-slate-900
-             {% else %}border-slate-300 text-slate-600{% endif %}">
-            Relevés
-          </a>
+      <!-- Menu mobile déroulant -->
+      {% if request.resolver_match %}
+        {% with current=request.resolver_match.url_name %}
+        <nav id="mobile-menu" class="md:hidden hidden bg-white border-b border-slate-200">
+          <div class="flex flex-col py-2 text-sm">
 
-          <a href="{% url 'rapport_mensuel' %}"
-             class="px-3 py-1 rounded-full border
-             {% if current == 'rapport_mensuel' %}bg-slate-900 text-white border-slate-900
-             {% else %}border-slate-300 text-slate-600{% endif %}">
-            Rapport mois
-          </a>
+            <a href="{% url 'dashboard' %}"
+               class="px-4 py-2 hover:bg-slate-50">
+              Tableau de bord
+            </a>
 
-          <a href="{% url 'rapport_trimestriel' %}"
-             class="px-3 py-1 rounded-full border
-             {% if current == 'rapport_trimestriel' %}bg-slate-900 text-white border-slate-900
-             {% else %}border-slate-300 text-slate-600{% endif %}">
-            Rapport trimestre
-          </a>
+            <a href="{% url 'releve_list' %}"
+               class="px-4 py-2 hover:bg-slate-50">
+              Relevés
+            </a>
 
-          <a href="{% url 'rapport_annuel' %}"
-             class="px-3 py-1 rounded-full border
-             {% if current == 'rapport_annuel' %}bg-slate-900 text-white border-slate-900
-             {% else %}border-slate-300 text-slate-600{% endif %}">
-            Rapport année
-          </a>
+            <a href="{% url 'centre_list' %}"
+               class="px-4 py-2 hover:bg-slate-50">
+              Centres
+            </a>
 
-          <a href="{% url 'rapport_global' %}"
-             class="px-3 py-1 rounded-full border
-             {% if current == 'rapport_global' %}bg-slate-900 text-white border-slate-900
-             {% else %}border-slate-300 text-slate-600{% endif %}">
-            Global
-          </a>
+            <a href="{% url 'livre_list' %}"
+               class="px-4 py-2 hover:bg-slate-50">
+              Livres
+            </a>
 
-          <a href="{% url 'centre_list' %}"
-             class="px-3 py-1 rounded-full border
-             {% if current == 'centre_list' %}bg-slate-900 text-white border-slate-900
-             {% else %}border-slate-300 text-slate-600{% endif %}">
-            Centres
-          </a>
+            <div class="mt-1 border-t border-slate-100 pt-1 text-xs uppercase tracking-wide text-slate-400 px-4">
+              Rapports
+            </div>
 
-          <a href="{% url 'livre_list' %}"
-             class="px-3 py-1 rounded-full border
-             {% if current == 'livre_list' %}bg-slate-900 text-white border-slate-900
-             {% else %}border-slate-300 text-slate-600{% endif %}">
-            Livres
-          </a>
-        </div>
-      </nav>
-      {% endwith %}
-    {% endif %}
+            <a href="{% url 'rapport_mensuel' %}"
+               class="px-4 py-2 hover:bg-slate-50">
+              Rapport mensuel
+            </a>
 
+            <a href="{% url 'rapport_hebdomadaire' %}"
+               class="px-4 py-2 hover:bg-slate-50">
+              Rapport hebdomadaire
+            </a>
+
+            <a href="{% url 'rapport_trimestriel' %}"
+               class="px-4 py-2 hover:bg-slate-50">
+              Rapport trimestriel
+            </a>
+
+            <a href="{% url 'rapport_annuel' %}"
+               class="px-4 py-2 hover:bg-slate-50">
+              Rapport annuel
+            </a>
+
+            <a href="{% url 'rapport_global' %}"
+               class="px-4 py-2 hover:bg-slate-50">
+              Rapport global
+            </a>
+          </div>
+        </nav>
+        {% endwith %}
+      {% endif %}
 
       <!-- Contenu de la page -->
       <section class="p-4 md:p-8">
@@ -164,5 +170,26 @@
       </section>
     </main>
   </div>
+
+  <!-- Script d’ouverture/fermeture du menu mobile -->
+  <script>
+    (function () {
+      const btn = document.getElementById("mobile-menu-button");
+      const mobileMenu = document.getElementById("mobile-menu");
+
+      if (!btn || !mobileMenu) return;
+
+      btn.addEventListener("click", function () {
+        mobileMenu.classList.toggle("hidden");
+      });
+
+      // Quand on clique sur un lien du menu mobile -> on referme
+      mobileMenu.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          mobileMenu.classList.add("hidden");
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
