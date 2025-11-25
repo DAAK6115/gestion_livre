@@ -24,6 +24,8 @@
           <th class="text-right py-2 px-3">Qté vendue</th>
           <th class="text-right py-2 px-3">Reste</th>
           <th class="text-right py-2 px-3">Montant ventes</th>
+          <th class="text-right py-2 px-3">Mobile Money</th>
+          <th class="text-right py-2 px-3">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -33,7 +35,6 @@
               <td class="py-2 px-3">{{ r.centre.nom }}</td>
               <td class="py-2 px-3">{{ r.livre.nom }}</td>
               <td class="py-2 px-3">
-                {{ r.get_type_periode_display }}<br>
                 <span class="text-xs text-slate-500">
                   {{ r.date_debut }} → {{ r.date_fin }}
                 </span>
@@ -42,11 +43,33 @@
               <td class="py-2 px-3 text-right">{{ r.quantite_vendue }}</td>
               <td class="py-2 px-3 text-right">{{ r.quantite_reste }}</td>
               <td class="py-2 px-3 text-right">{{ r.montant_ventes }} FCFA</td>
+              <td class="py-2 px-3 text-right">
+                {% if r.operateur_mobile_money %}
+                  <div>{{ r.get_operateur_mobile_money_display }}</div>
+                  {% if r.montant_frais_retrait %}
+                    <div class="text-xs text-slate-500">
+                      Frais : {{ r.montant_frais_retrait }} FCFA
+                    </div>
+                  {% endif %}
+                {% else %}
+                  <span class="text-xs text-slate-400">—</span>
+                {% endif %}
+              </td>
+              <td class="py-2 px-3 text-right space-x-2 whitespace-nowrap">
+                <a href="{% url 'releve_update' r.pk %}"
+                   class="inline-flex items-center rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100">
+                  Modifier
+                </a>
+                <a href="{% url 'releve_delete' r.pk %}"
+                   class="inline-flex items-center rounded-md border border-red-300 px-2 py-1 text-xs text-red-700 hover:bg-red-50">
+                  Supprimer
+                </a>
+              </td>
             </tr>
           {% endfor %}
         {% else %}
           <tr>
-            <td colspan="7" class="py-4 px-3 text-center text-slate-500">
+            <td colspan="9" class="py-4 px-3 text-center text-slate-500">
               Aucun relevé pour le moment.
             </td>
           </tr>

@@ -7,31 +7,36 @@ from django import forms
 from .models import ReleveCentreLivre, Livre, Centre
 
 
+from django import forms
+from .models import ReleveCentreLivre, Centre
+
+
 class ReleveCentreLivreForm(forms.ModelForm):
     class Meta:
         model = ReleveCentreLivre
         fields = [
             "centre",
             "livre",
-            "type_periode",
             "date_debut",
             "date_fin",
             "quantite_recue",
             "quantite_vendue",
             "prix_unitaire",
             "depenses",
+            "operateur_mobile_money",
+            "taux_frais_retrait",
         ]
-    # labels clairs façon Excel
         labels = {
             "centre": "Centre",
             "livre": "Livre",
-            "type_periode": "Type de période",
             "date_debut": "Date de début",
             "date_fin": "Date de fin",
             "quantite_recue": "Nombre de livres en stock / reçus pour la période",
             "quantite_vendue": "Nombre de livres vendus pendant la période",
             "prix_unitaire": "Prix unitaire (FCFA)",
-            "depenses": "Dépenses liées (transport, commissions, …)",
+            "depenses": "Autres dépenses (transport, commissions, …)",
+            "operateur_mobile_money": "Opérateur Mobile Money",
+            "taux_frais_retrait": "Taux de frais de retrait (%)",
         }
         widgets = {
             "centre": forms.Select(
@@ -40,11 +45,6 @@ class ReleveCentreLivreForm(forms.ModelForm):
                 }
             ),
             "livre": forms.Select(
-                attrs={
-                    "class": "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900",
-                }
-            ),
-            "type_periode": forms.Select(
                 attrs={
                     "class": "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900",
                 }
@@ -87,17 +87,32 @@ class ReleveCentreLivreForm(forms.ModelForm):
                     "step": "0.01",
                 }
             ),
+            "operateur_mobile_money": forms.Select(
+                attrs={
+                    "class": "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900",
+                }
+            ),
+            "taux_frais_retrait": forms.NumberInput(
+                attrs={
+                    "class": "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900",
+                    "min": 0,
+                    "step": "0.01",
+                    "placeholder": "Ex : 1.5 pour 1,5%",
+                }
+            ),
         }
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
 
-        # Si l'utilisateur est un centre, on fixe son centre et on cache le choix
+        # Si l'utilisateur est un centre, on fixe son centre et on le bloque
         if user and hasattr(user, "is_centre") and user.is_centre() and user.centre_id:
             self.fields["centre"].queryset = Centre.objects.filter(pk=user.centre_id)
             self.fields["centre"].initial = user.centre
             self.fields["centre"].disabled = True
+
+
 
 
 class LivreForm(forms.ModelForm):

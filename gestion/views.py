@@ -22,6 +22,9 @@ from xhtml2pdf import pisa
 from django.core.exceptions import PermissionDenied
 from functools import wraps
 
+from django.shortcuts import get_object_or_404
+from django.core.exceptions import PermissionDenied
+
 
 def admin_required(view_func):
     @wraps(view_func)
@@ -75,7 +78,6 @@ def rapport_hebdomadaire(request):
 
     # uniquement relevés de type "semaine"
     releves = ReleveCentreLivre.objects.filter(
-        type_periode=ReleveCentreLivre.PERIODE_SEMAINE,
         date_fin__gte=date_debut,
         date_fin__lte=date_fin,
     )
@@ -148,7 +150,6 @@ def rapport_mensuel(request):
 
     # queryset de base : relevés du mois, type "mois"
     releves = ReleveCentreLivre.objects.filter(
-        type_periode=ReleveCentreLivre.PERIODE_MOIS,
         date_fin__gte=date_debut,
         date_fin__lte=date_fin,
     )
@@ -639,7 +640,6 @@ def export_rapport_mensuel_excel(request):
     date_debut, date_fin = _month_range(year, month)
 
     releves = ReleveCentreLivre.objects.filter(
-        type_periode=ReleveCentreLivre.PERIODE_MOIS,
         date_fin__gte=date_debut,
         date_fin__lte=date_fin,
     )
@@ -753,7 +753,6 @@ def export_rapport_mensuel_pdf(request):
     date_debut, date_fin = _month_range(year, month)
 
     releves = ReleveCentreLivre.objects.filter(
-        type_periode=ReleveCentreLivre.PERIODE_MOIS,
         date_fin__gte=date_debut,
         date_fin__lte=date_fin,
     )
@@ -1191,3 +1190,53 @@ def releve_create(request):
         form = ReleveCentreLivreForm(user=user)
 
     return render(request, "gestion/releve_form.html", {"form": form})
+
+
+@login_required
+def releve_update(request, pk):
+    user = request.user
+    releve = get_object_or_404(ReleveCentreLivre, pk=pk)
+
+    # Un utilisateur "centre" ne peut modifier que ses propres relevés
+    if hasattr(user, "is_centre") and user.is_centre() and user.centre_id:
+        if releve.centre_id != user.centre_id:
+            raise PermissionDenied
+
+    if request.method == "POST":
+        form = ReleveCentreLivreForm(request.POST, instance=releve, user=user)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            # Sécurité : si c'est un centre, on force le centre
+            if hasattr(user, "is_centre") and user.is_centre() and user.centre_id:
+                obj.centre = user.centre
+            obj.save()
+            return redirect("releve_list")
+    else:
+        form = ReleveCentreLivreForm(instance=releve, user=user)
+
+    return render(
+        request,
+        "gestion/releve_form.html",
+        {"form": form, "mode": "update", "releve": releve},
+    )
+
+
+@login_required
+def releve_delete(request, pk):
+    user = request.user
+    releve = get_object_or_404(ReleveCentreLivre, pk=pk)
+
+    # Un utilisateur "centre" ne peut supprimer que ses propres relevés
+    if hasattr(user, "is_centre") and user.is_centre() and user.centre_id:
+        if releve.centre_id != user.centre_id:
+            raise PermissionDenied
+
+    if request.method == "POST":
+        releve.delete()
+        return redirect("releve_list")
+
+    return render(
+        request,
+        "gestion/releve_confirm_delete.html",
+        {"releve": releve},
+        )

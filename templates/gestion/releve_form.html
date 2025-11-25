@@ -43,18 +43,8 @@
         </div>
       </div>
 
-      <!-- Période -->
-      <div class="grid md:grid-cols-3 gap-4">
-        <div class="space-y-1">
-          <label class="block text-xs font-medium text-slate-600">
-            {{ form.type_periode.label }}
-          </label>
-          {{ form.type_periode }}
-          {% for error in form.type_periode.errors %}
-            <p class="text-xs text-red-600">{{ error }}</p>
-          {% endfor %}
-        </div>
-
+            <!-- Période -->
+      <div class="grid md:grid-cols-2 gap-4">
         <div class="space-y-1">
           <label class="block text-xs font-medium text-slate-600">
             {{ form.date_debut.label }}
@@ -75,6 +65,12 @@
           {% endfor %}
         </div>
       </div>
+
+      <p class="text-[11px] text-slate-400">
+        La période définie par ces deux dates sera utilisée automatiquement
+        pour les rapports hebdomadaires, mensuels, trimestriels, annuels et le global.
+      </p>
+
 
       <!-- Zone "comme dans Excel" : stock, vendus, prix, dépenses -->
       <div class="grid md:grid-cols-2 gap-4">
@@ -135,6 +131,37 @@
           {% endfor %}
         </div>
       </div>
+
+            <!-- Mobile Money : opérateur + taux -->
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.operateur_mobile_money.label }}
+          </label>
+          {{ form.operateur_mobile_money }}
+          <p class="text-[11px] text-slate-400">
+            Choisis l'opérateur si les ventes sont encaissées ou retirées via Mobile Money.
+          </p>
+          {% for error in form.operateur_mobile_money.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-medium text-slate-600">
+            {{ form.taux_frais_retrait.label }}
+          </label>
+          {{ form.taux_frais_retrait }}
+          <p class="text-[11px] text-slate-400">
+            Exemple : 1,5 pour 1,5% de frais de retrait. Les frais sont
+            calculés automatiquement à partir du montant des ventes.
+          </p>
+          {% for error in form.taux_frais_retrait.errors %}
+            <p class="text-xs text-red-600">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+
 
       <!-- Encadré de rappel des calculs -->
       <div class="mt-4 border border-slate-200 rounded-xl bg-slate-50 px-4 py-3 text-xs text-slate-600 space-y-1">

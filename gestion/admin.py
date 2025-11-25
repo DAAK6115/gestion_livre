@@ -19,11 +19,10 @@ class ReleveCentreLivreAdmin(admin.ModelAdmin):
     list_display = (
         "centre",
         "livre",
-        "type_periode",
         "date_debut",
         "date_fin",
         "quantite_vendue",
         "montant_ventes",
     )
-    list_filter = ("type_periode", "centre", "livre", "date_debut", "date_fin")
+    list_filter = ("centre", "livre", "date_debut", "date_fin")
     search_fields = ("centre__nom", "livre__nom")

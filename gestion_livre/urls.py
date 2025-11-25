@@ -6,6 +6,8 @@ from gestion.views import (
     dashboard,
     releve_list,
     releve_create,
+    releve_update,
+    releve_delete,
     rapport_hebdomadaire,
     rapport_trimestriel,
     rapport_mensuel,
@@ -29,7 +31,6 @@ from gestion.views import (
 )
 
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
 
@@ -47,6 +48,8 @@ urlpatterns = [
     # Relevés
     path("releves/", releve_list, name="releve_list"),
     path("releves/nouveau/", releve_create, name="releve_create"),
+    path("releves/<int:pk>/modifier/", releve_update, name="releve_update"),
+    path("releves/<int:pk>/supprimer/", releve_delete, name="releve_delete"),
 
     # Rapports
     path("rapports/mois/", rapport_mensuel, name="rapport_mensuel"),

@@ -92,6 +92,71 @@
           {% endif %}
         </div>
       </header>
+          <!-- Menu mobile -->
+    {% if request.resolver_match %}
+      {% with current=request.resolver_match.url_name %}
+      <nav class="md:hidden bg-white border-b border-slate-200">
+        <div class="flex overflow-x-auto gap-3 px-4 py-2 text-xs whitespace-nowrap">
+          <a href="{% url 'dashboard' %}"
+             class="px-3 py-1 rounded-full border
+             {% if current == 'dashboard' %}bg-slate-900 text-white border-slate-900
+             {% else %}border-slate-300 text-slate-600{% endif %}">
+            Tableau de bord
+          </a>
+
+          <a href="{% url 'releve_list' %}"
+             class="px-3 py-1 rounded-full border
+             {% if current == 'releve_list' %}bg-slate-900 text-white border-slate-900
+             {% else %}border-slate-300 text-slate-600{% endif %}">
+            Relevés
+          </a>
+
+          <a href="{% url 'rapport_mensuel' %}"
+             class="px-3 py-1 rounded-full border
+             {% if current == 'rapport_mensuel' %}bg-slate-900 text-white border-slate-900
+             {% else %}border-slate-300 text-slate-600{% endif %}">
+            Rapport mois
+          </a>
+
+          <a href="{% url 'rapport_trimestriel' %}"
+             class="px-3 py-1 rounded-full border
+             {% if current == 'rapport_trimestriel' %}bg-slate-900 text-white border-slate-900
+             {% else %}border-slate-300 text-slate-600{% endif %}">
+            Rapport trimestre
+          </a>
+
+          <a href="{% url 'rapport_annuel' %}"
+             class="px-3 py-1 rounded-full border
+             {% if current == 'rapport_annuel' %}bg-slate-900 text-white border-slate-900
+             {% else %}border-slate-300 text-slate-600{% endif %}">
+            Rapport année
+          </a>
+
+          <a href="{% url 'rapport_global' %}"
+             class="px-3 py-1 rounded-full border
+             {% if current == 'rapport_global' %}bg-slate-900 text-white border-slate-900
+             {% else %}border-slate-300 text-slate-600{% endif %}">
+            Global
+          </a>
+
+          <a href="{% url 'centre_list' %}"
+             class="px-3 py-1 rounded-full border
+             {% if current == 'centre_list' %}bg-slate-900 text-white border-slate-900
+             {% else %}border-slate-300 text-slate-600{% endif %}">
+            Centres
+          </a>
+
+          <a href="{% url 'livre_list' %}"
+             class="px-3 py-1 rounded-full border
+             {% if current == 'livre_list' %}bg-slate-900 text-white border-slate-900
+             {% else %}border-slate-300 text-slate-600{% endif %}">
+            Livres
+          </a>
+        </div>
+      </nav>
+      {% endwith %}
+    {% endif %}
+
 
       <!-- Contenu de la page -->
       <section class="p-4 md:p-8">
